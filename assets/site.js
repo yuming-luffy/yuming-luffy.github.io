@@ -25,6 +25,64 @@ $$('[data-mood]').forEach(frame => {
   });
 });
 
+const orbit = $('.crew-orbit');
+if (orbit && typeof Element.prototype.animate === 'function') {
+  const frames = $$('.crew-frame', orbit), toggle = $('.orbit-toggle');
+  const slots = frames.map(frame => {
+    const slot = document.createElement('div'); slot.className = 'orbit-slot';
+    frame.before(slot); slot.append(frame); return slot;
+  });
+  let animations = [], duration = 80000, progress = 0, userPaused = false;
+  let hovering = false, visible = true, geometry = '';
+  function syncPlayback() {
+    const paused = userPaused || hovering || !visible || document.hidden || orbit.matches(':focus-within');
+    animations.forEach(animation => paused ? animation.pause() : animation.play());
+  }
+  function configureOrbit() {
+    const {width, height} = orbit.getBoundingClientRect();
+    const key = `${width}:${height}:${reducedMotion.matches}`;
+    if (!width || key === geometry) return;
+    geometry = key;
+    if (animations.length) progress = (Number(animations[0].currentTime) || 0) / duration;
+    animations.forEach(animation => animation.cancel()); animations = [];
+    orbit.classList.toggle('is-orbiting', !reducedMotion.matches);
+    toggle.hidden = reducedMotion.matches;
+    if (reducedMotion.matches) return;
+    const phone = width <= 520;
+    duration = phone ? 96000 : 80000;
+    const radiusX = width * (phone ? .68 : width <= 1100 ? .45 : .41);
+    const radiusY = height * .39 - (phone ? 20 : 0);
+    const start = document.timeline.currentTime;
+    animations = slots.map((slot, index) => {
+      const keyframes = Array.from({length:73}, (_, step) => {
+        const angle = -Math.PI / 2 + (index / slots.length + step / 72) * Math.PI * 2;
+        return {transform:`translate3d(${(Math.cos(angle)*radiusX).toFixed(3)}px,${(Math.sin(angle)*radiusY).toFixed(3)}px,0)`};
+      });
+      const animation = slot.animate(keyframes, {duration, iterations:Infinity, easing:'linear'});
+      animation.startTime = start - progress * duration;
+      return animation;
+    });
+    syncPlayback();
+  }
+  orbit.addEventListener('pointerover', e => { if (e.target.closest('.crew-frame')) { hovering = true; syncPlayback(); } });
+  orbit.addEventListener('pointerout', e => {
+    const frame = e.target.closest('.crew-frame');
+    if (frame && !frame.contains(e.relatedTarget)) { hovering = false; syncPlayback(); }
+  });
+  orbit.addEventListener('focusin', syncPlayback);
+  orbit.addEventListener('focusout', () => queueMicrotask(syncPlayback));
+  toggle.addEventListener('click', () => {
+    userPaused = !userPaused; toggle.textContent = userPaused ? '继续环绕' : '暂停环绕';
+    toggle.setAttribute('aria-pressed', String(userPaused)); syncPlayback();
+  });
+  reducedMotion.addEventListener('change', configureOrbit);
+  document.addEventListener('visibilitychange', syncPlayback);
+  if ('ResizeObserver' in window) new ResizeObserver(configureOrbit).observe(orbit);
+  else window.addEventListener('resize', configureOrbit);
+  if ('IntersectionObserver' in window) new IntersectionObserver(entries => { visible = entries[0].isIntersecting; syncPlayback(); }).observe(orbit);
+  configureOrbit();
+}
+
 $('.copy-link')?.addEventListener('click', async () => {
   const status = $('.copy-status');
   try { await navigator.clipboard.writeText(location.href.split('#')[0]); status.textContent = '链接已复制'; }

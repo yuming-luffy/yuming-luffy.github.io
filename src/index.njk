@@ -7,7 +7,7 @@ bodyClass: home
   {% for frame in crew %}<button type="button" class="crew-frame frame-{{ loop.index }}" data-mood="{{ frame.title }}" aria-label="{{ frame.alt }}：{{ frame.title }}"><img src="/assets/images/crew-{{ frame.id }}-small.webp" alt="{{ frame.alt }}" width="480" height="270" {% if loop.index > 6 %}loading="lazy"{% else %}fetchpriority="high"{% endif %}></button>{% endfor %}
   </div>
   <div class="hero-copy"><h1 id="home-title"><span>张峰瑜的</span><span>伟大航线</span></h1><p class="hero-description">在代码里探索，在生活里冒险。<br>记录技术、学习与生活的中文博客。</p><a class="button primary" href="#journal">翻开航海日志 <span aria-hidden="true">↗</span></a></div>
-  <div class="hero-bottom"><span id="mood" aria-live="polite">好奇心，就是记录指针。</span><span>点选画面，换个出发的心情</span></div>
+  <div class="hero-bottom"><span id="mood" aria-live="polite">好奇心，就是记录指针。</span><button class="orbit-toggle" type="button" aria-pressed="false" hidden>暂停环绕</button></div>
 </section>
 <section class="home-journal section-wrap" id="journal" aria-labelledby="journal-heading">
   <div class="section-heading reveal"><h2 id="journal-heading">航海日志</h2><a href="/journal/">全部日志 →</a></div>
