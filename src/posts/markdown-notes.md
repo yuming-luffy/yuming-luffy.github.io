@@ -5,6 +5,7 @@ date: 2026-10-24
 category: 技术笔记
 topics: [Markdown, 写作]
 cover: 6
+commentIssue: 2
 sample: true
 ---
 ## 先说清楚问题

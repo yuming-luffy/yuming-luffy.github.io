@@ -5,6 +5,7 @@ date: 2026-10-23
 category: 学习记录
 topics: [学习方法, 复盘]
 cover: 4
+commentIssue: 3
 sample: true
 ---
 ## 从一个具体问题出发

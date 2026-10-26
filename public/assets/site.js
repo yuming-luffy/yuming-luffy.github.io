@@ -80,7 +80,7 @@ if (searchForm) {
 
 const commentSection = $('[data-comments]');
 if (commentSection) {
-  const {repo,slug} = commentSection.dataset;
+  const {repo,slug,issue:issueNumber} = commentSection.dataset;
   const status = $('.comment-status',commentSection), list = $('.comment-list',commentSection), link = $('[data-comment-link]',commentSection), retry = $('.retry-comments',commentSection);
   const endpoint = `https://api.github.com/repos/${repo}`;
   async function api(url) { const r = await fetch(url, { headers: { Accept: 'application/vnd.github+json' }, signal: AbortSignal.timeout(12000) }); if(!r.ok) throw Error(r.status); return r.json(); }
@@ -93,8 +93,13 @@ if (commentSection) {
   async function loadComments() {
     retry.hidden = true; status.textContent = '正在读取留言…'; list.replaceChildren();
     try {
-      const data = await api(`https://api.github.com/search/issues?q=${encodeURIComponent(`repo:${repo} is:issue in:title "[留言] ${slug}"`)}&per_page=100`);
-      const issue = data.items.filter(i => i.title === `[留言] ${slug}`).sort((a,b) => a.number-b.number)[0];
+      let issue;
+      if (/^[1-9]\d*$/.test(issueNumber || '')) {
+        issue = await api(`${endpoint}/issues/${issueNumber}`);
+      } else {
+        const data = await api(`https://api.github.com/search/issues?q=${encodeURIComponent(`repo:${repo} is:issue in:title "[留言] ${slug}"`)}&per_page=100`);
+        issue = data.items.filter(i => i.title === `[留言] ${slug}`).sort((a,b) => a.number-b.number)[0];
+      }
       if (!issue) { status.textContent = '还没有留言。到 GitHub 开启这篇日志的第一段讨论吧。'; return; }
       link.href = issue.html_url;
       if(issue.body && !issue.body.startsWith('<!-- blog-comment-thread -->')) addMessage(issue.user,issue.body,issue.created_at,issue.html_url);
