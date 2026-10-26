@@ -1,0 +1,6 @@
+---
+layout: base.njk
+title: 航海影集
+permalink: /gallery/index.html
+---
+<div class="page-heading"><h1>航海影集</h1><p>收进这条航线的十二幅海贼王画面。点击图片，可以放大细看。</p></div><div class="full-gallery section-wrap">{% for frame in crew %}<figure id="image-{{ frame.id }}" class="reveal"><a href="/assets/images/crew-{{ frame.id }}.webp" class="lightbox-link"><img src="/assets/images/crew-{{ frame.id }}.webp" alt="{{ frame.alt }}" width="1920" height="1080" loading="lazy"></a><figcaption>{{ frame.title }}</figcaption></figure>{% endfor %}</div><dialog class="lightbox" aria-label="图片大图"><button type="button" class="lightbox-close" aria-label="关闭大图">关闭 ×</button><img alt=""><p></p></dialog>

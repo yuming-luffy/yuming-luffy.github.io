@@ -1,0 +1,7 @@
+---
+layout: base.njk
+title: 航海日志
+nav: journal
+permalink: /journal/index.html
+---
+<div class="page-heading"><h1>航海日志</h1><p>技术、学习与生活，都是值得探索的海域。</p></div><div class="archive-layout section-wrap"><aside class="archive-sidebar"><h2>选择海域</h2><nav class="category-nav" aria-label="文章分类"><a href="/journal/" aria-current="page">全部日志 <span>{{ collections.posts.length }}</span></a>{% for category in site.categories %}<a href="/categories/{{ category | slugify }}/">{{ category }} <span>{{ collections.posts | byCategory(category) | length }}</span></a>{% endfor %}</nav><h2>标签</h2><div class="tag-cloud">{% for topic in collections.topics %}<a href="/tags/{{ topic | slugify }}/">#{{ topic }}</a>{% endfor %}</div></aside><section aria-label="文章列表">{% set posts = collections.posts %}{% include 'post-list.njk' %}</section></div>

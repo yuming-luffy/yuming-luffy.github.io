@@ -1,0 +1,12 @@
+---
+layout: base.njk
+nav: journal
+pagination:
+  data: site.categories
+  size: 1
+  alias: category
+eleventyComputed:
+  title: "{{ category }}"
+permalink: "/categories/{{ category | slugify }}/index.html"
+---
+<div class="page-heading"><h1>{{ category }}</h1><p>沿着感兴趣的方向，再读一页。</p></div><div class="section-wrap archive-content"><nav class="category-tabs" aria-label="文章分类"><a href="/journal/">全部</a>{% for item in site.categories %}<a href="/categories/{{ item | slugify }}/" {% if item == category %}aria-current="page"{% endif %}>{{ item }}</a>{% endfor %}</nav>{% set posts = collections.posts | byCategory(category) %}{% include 'post-list.njk' %}</div>

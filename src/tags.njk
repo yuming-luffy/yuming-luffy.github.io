@@ -1,0 +1,12 @@
+---
+layout: base.njk
+nav: journal
+pagination:
+  data: collections.topics
+  size: 1
+  alias: topic
+eleventyComputed:
+  title: "标签：{{ topic }}"
+permalink: "/tags/{{ topic | slugify }}/index.html"
+---
+<div class="page-heading"><h1>#{{ topic }}</h1><p>散落在不同日志里的同一条线索。</p></div><div class="section-wrap archive-content"><div class="tag-cloud">{% for item in collections.topics %}<a href="/tags/{{ item | slugify }}/" {% if item == topic %}aria-current="page"{% endif %}>#{{ item }}</a>{% endfor %}</div>{% set posts = collections.posts | byTopic(topic) %}{% include 'post-list.njk' %}</div>

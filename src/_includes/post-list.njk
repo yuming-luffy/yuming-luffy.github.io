@@ -1,0 +1,8 @@
+<div class="post-list">
+{% for post in posts %}
+  <article class="post-row reveal">
+    <a class="post-thumb" href="{{ post.url }}" tabindex="-1" aria-hidden="true"><img src="/assets/images/crew-{{ post.data.cover }}-small.webp" alt="" width="480" height="270" loading="lazy"></a>
+    <div class="post-summary"><div class="post-meta"><a href="/categories/{{ post.data.category | slugify }}/">{{ post.data.category }}</a><time datetime="{{ post.date.toISOString() }}">{{ post.date | dateText }}</time>{% if post.data.sample %}<span>内容样例</span>{% endif %}</div><h3><a href="{{ post.url }}">{{ post.data.title }}</a></h3><p>{{ post.data.description }}</p><div class="post-topics">{% for topic in post.data.topics %}<a href="/tags/{{ topic | slugify }}/">#{{ topic }}</a>{% endfor %}</div></div>
+  </article>
+{% else %}<div class="empty-state"><p>这片海域，还没有留下记录。</p><a href="/journal/">先去其他日志逛逛</a></div>{% endfor %}
+</div>
